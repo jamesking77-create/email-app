@@ -1,35 +1,36 @@
 package data.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private String firstName;
     private String  lastName;
     private String phoneNumber;
     private int id;
     private String emailAddress;
-    private String userName;
+    private List<Mail> inbox = new ArrayList<>();
+    private List<Mail> outBox = new ArrayList<>();
+    private List<Mail> sentBox = new ArrayList<>();
+    private List<Mail> draft = new ArrayList<>();
+    private List<Mail> allMail = new ArrayList<>();
 
-    public String getUserName() {
-        return userName;
+    private List<Mail> trash = new ArrayList<>();
+
+    public List<Mail> getTrash() {
+        return trash;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setTrash(List<Mail> trash) {
+        this.trash = trash;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public List<Mail> getAllMail() {
+        return allMail;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setAllMail(List<Mail> allMail) {
+        this.allMail = allMail;
     }
 
     public String getFirstName() {
@@ -54,5 +55,53 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public List<Mail> getInbox() {
+        return inbox;
+    }
+
+    public void setInbox(List<Mail> inbox) {
+        this.inbox = inbox;
+    }
+
+    public List<Mail> getOutBox() {
+        return outBox;
+    }
+
+    public void setOutBox(List<Mail> outBox) {
+        this.outBox = outBox;
+    }
+
+    public List<Mail> getSentBox() {
+        return sentBox;
+    }
+
+    public void setSentBox(List<Mail> sentBox) {
+        this.sentBox = sentBox;
+    }
+
+    public List<Mail> getDraft() {
+        return draft;
+    }
+
+    public void setDraft(List<Mail> draft) {
+        this.draft = draft;
     }
 }

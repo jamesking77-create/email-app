@@ -11,4 +11,7 @@ public interface MailRepository {
     void deleteMailById(int id);
     long countMail();
     void deleteAllMail();
+    void deleteMailByTitle(String title);
+
+    Mail findByTitle(String title);
 }

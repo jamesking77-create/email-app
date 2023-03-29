@@ -1,47 +1,39 @@
 package service;
 
 import data.model.Mail;
+import data.repository.MailRepository;
+import data.repository.MailRepositoryImpl;
 
-import java.util.List;
 
 public class MailServiceImpl implements MailService{
+    MailRepository mailRepository = new MailRepositoryImpl();
     @Override
-    public String composeMail(String recipientEmail, String subject, String body) {
-        return null;
+    public Mail saveMail(Mail MailRequest) {
+        return mailRepository.saveMail(MailRequest);
     }
 
     @Override
-    public Mail[] inbox() {
-        return new Mail[0];
+    public void deleteMailById(int id){
+    mailRepository.deleteMailById(id);
     }
 
     @Override
-    public List<Mail> allMail() {
-        return null;
+    public void deleteAllMail() {
+    mailRepository.deleteAllMail();
     }
 
     @Override
-    public List<Mail> sentBox() {
-        return null;
+    public void deleteMailByTitle(String title) {
+        mailRepository.deleteMailByTitle(title);
     }
 
     @Override
-    public List<Mail> draft(Mail mail) {
-        return null;
+    public Mail findMailByTitle(String title) {
+        return mailRepository.findByTitle(title);
     }
 
     @Override
-    public List<Mail> outBox(Mail mail) {
-        return null;
-    }
-
-    @Override
-    public String delete() {
-        return null;
-    }
-
-    @Override
-    public String deleteAll() {
-        return null;
+    public Mail findById(int id) {
+        return mailRepository.findById(id);
     }
 }

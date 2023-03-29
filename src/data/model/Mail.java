@@ -1,8 +1,27 @@
 package data.model;
 
+import java.time.LocalDateTime;
+
 public class Mail {
     private String subject;
     private String body;
+    private int id;
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public LocalDateTime getDateTime() {
+        return LocalDateTime.now();
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+    }
 
     public String getSubject() {
         return subject;
@@ -28,6 +47,6 @@ public class Mail {
         this.id = id;
     }
 
-    private int id;
+
 
 }

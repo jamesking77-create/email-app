@@ -4,6 +4,7 @@ import data.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UserRepositoryImpl implements UserRepository{
 
@@ -44,7 +45,8 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public User findUserByEmailAddress(String emailAddress) {
         for (User user: users) {
-            if ( emailAddress.equals(user.getEmailAddress())) return user;
+            if (Objects.equals(emailAddress, user.getEmailAddress())) return user;
+
         }
         return null;
     }

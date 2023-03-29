@@ -13,4 +13,6 @@ public interface UserRepository {
     long countUser();
     void deleteAllUser();
 
+
+
 }

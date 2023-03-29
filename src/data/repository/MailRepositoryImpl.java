@@ -4,6 +4,7 @@ import data.model.Mail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MailRepositoryImpl implements MailRepository{
 
@@ -61,5 +62,18 @@ public class MailRepositoryImpl implements MailRepository{
     public void deleteAllMail() {
         mailList.clear();
         count = 0;
+    }
+
+    @Override
+    public void deleteMailByTitle(String title) {
+        mailList.removeIf(mail -> Objects.equals(title, mail.getSubject()));
+    }
+
+    @Override
+    public Mail findByTitle(String title) {
+        for (Mail mail: mailList) {
+            if (title.equals(mail.getSubject())) return mail;
+        }
+        return null;
     }
 }
