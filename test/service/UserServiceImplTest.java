@@ -6,9 +6,7 @@ import dtos.request.LoginRequest;
 import dtos.request.RegisterRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceImplTest {
@@ -29,12 +27,14 @@ class UserServiceImplTest {
         registerRequest.setLastName("micheal");
         registerRequest.setUserName("moyex");
         registerRequest.setPassword("6789");
+        registerRequest.setPhoneNumber("000000");
         registerRequest.setEmailAddress("moyex33@gmail.com");
         loginRequest.setEmailAddress(registerRequest.getEmailAddress());
         loginRequest.setPassword(registerRequest.getPassword());
         registerRequest2.setFirstName("moyin");
         registerRequest2.setLastName("micheal");
-        registerRequest2.setEmailAddress("moyex23@gmail.com");
+        registerRequest2.setEmailAddress("moyex3@gmail.com");
+        registerRequest2.setPhoneNumber("9999999");
 
         mail.setSubject("i love cake");
         mail.setBody("buy me cake");

@@ -1,5 +1,4 @@
 package service;
-
 import data.model.Mail;
 import data.model.User;
 import data.repository.UserRepository;
@@ -9,9 +8,7 @@ import dtos.request.RegisterRequest;
 import dtos.response.ComposeMailResponse;
 import dtos.response.FindLoginResponse;
 import util.Mapper;
-
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,6 +18,8 @@ public class UserServiceImpl implements UserService{
     private final MailService mailService = new MailServiceImpl();
     @Override
     public User register(RegisterRequest registerRequest) {
+            validateEmailAddress(registerRequest.getEmailAddress());
+            validatePhoneNumber(registerRequest.getPhoneNumber());
         if (userExist(registerRequest.getEmailAddress())){
             System.err.println("Address " + registerRequest.getEmailAddress()+" already taken");
             generateEmailAddress(registerRequest);
@@ -28,7 +27,22 @@ public class UserServiceImpl implements UserService{
         return userRepository.saveUser(Mapper.map(registerRequest));
     }
 
+    private void validatePhoneNumber(String phoneNumber){
+        String [] alphabet = {"a","b","c","d","e","f",
+                "g","m","h","i","j","k","l",
+                "m","n","o","p","q","r","s","t",
+                "u","v","w","x","y","z","A","B","C","D","E",
+                "F","G","H","I","J","K","L","M","N","O",
+                "P","Q","R","S","T","U","V","W","X","Y","Z"};
+        for (String letter : alphabet) {
+            if (phoneNumber.contains(letter)) {
+                throw new IllegalArgumentException("invalid number");
+            }
+        }
+    }
+
     private void generateEmailAddress(RegisterRequest registerRequest) {
+        validateEmailAddress(registerRequest.getEmailAddress());
         SecureRandom random = new SecureRandom();
         int randNum = random.nextInt(200);
          registerRequest.setEmailAddress(registerRequest.getFirstName().charAt(0)+
@@ -38,6 +52,12 @@ public class UserServiceImpl implements UserService{
                      registerRequest.getLastName()+ randNum+"@gmail.com");
 
         System.out.println(registerRequest.getEmailAddress());
+    }
+
+    private void validateEmailAddress(String emailAddress) {
+        if (!emailAddress.matches("[a-z]+[0-9]+@[a-z]+\\.[a-z]{2,}")){
+            System.err.println("invalid email");
+        }
     }
 
     private boolean userExist(String emailAddress) {
@@ -69,8 +89,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<Mail> viewInbox(String  userEmail) {
-        return userRepository.findUserByEmailAddress(userEmail).getOutBox();
+    public String viewInbox(String  userEmail) {
+
+        for (Mail mail :  userRepository.findUserByEmailAddress(userEmail).getInbox()) {
+            if (userRepository.findUserByEmailAddress(userEmail).getInbox().size() > 0){
+                return String.format("""
+                 ===========================
+                 %s
+                 ===========================
+                 """,mail);
+            }
+
+        }
+        return null;
     }
               
     @Override

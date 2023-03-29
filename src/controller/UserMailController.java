@@ -8,7 +8,7 @@ import service.UserServiceImpl;
 
 public class UserMailController {
 private final UserService userService = new UserServiceImpl();
-    public Object registerUser(RegisterRequest registerRequest){
+    public Object  registerUser(RegisterRequest registerRequest){
         try {
            return userService.register(registerRequest);
         }catch (IllegalArgumentException e){
@@ -32,7 +32,7 @@ private final UserService userService = new UserServiceImpl();
         }
     }
 
-    public Object viewInbox(String userEmail){
+    public String viewInbox(String userEmail){
         try {
             return userService.viewInbox(userEmail);
         }catch (IllegalArgumentException e){

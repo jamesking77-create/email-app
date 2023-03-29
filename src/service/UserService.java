@@ -12,7 +12,7 @@ public interface UserService {
     String login(LoginRequest loginRequest);
     User findUserById(int id);
     User findUserByEmailAddress(String emailAddress);
-    List<Mail> viewInbox(String userEmail);
+    String viewInbox(String userEmail);
     String sendMail(String senderEMailAddress, Mail mail, String recipientEMailAddress);
     List<Mail> viewAllMail(String userEmail);
     List<Mail> viewSentBox(String userEmail);
