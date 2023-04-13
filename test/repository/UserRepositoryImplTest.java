@@ -1,8 +1,8 @@
 package repository;
 
-import data.model.User;
-import data.repository.UserRepository;
-import data.repository.UserRepositoryImpl;
+import myEmailApp.dtos.data.model.User;
+import myEmailApp.dtos.data.repository.UserRepository;
+import myEmailApp.dtos.data.repository.UserRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
