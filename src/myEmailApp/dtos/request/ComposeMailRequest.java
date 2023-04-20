@@ -1,7 +1,7 @@
 package myEmailApp.dtos.request;
 
 
-import myEmailApp.dtos.data.model.Mail;
+import myEmailApp.data.model.Mail;
 
 import java.time.LocalDateTime;
 

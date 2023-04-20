@@ -1,8 +1,8 @@
 package service;
 
-import myEmailApp.dtos.data.model.Mail;
-import myEmailApp.dtos.service.MailService;
-import myEmailApp.dtos.service.MailServiceImpl;
+import myEmailApp.data.model.Mail;
+import myEmailApp.service.MailService;
+import myEmailApp.service.MailServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

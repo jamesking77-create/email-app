@@ -1,16 +1,17 @@
 package service;
 
-import myEmailApp.dtos.data.model.Mail;
-import myEmailApp.dtos.data.model.User;
+import myEmailApp.data.model.Mail;
+import myEmailApp.data.model.User;
 import myEmailApp.dtos.request.ComposeMailRequest;
 import myEmailApp.dtos.request.LoginRequest;
 import myEmailApp.dtos.request.RegisterRequest;
-import myEmailApp.dtos.service.UserService;
-import myEmailApp.dtos.service.UserServiceImpl;
-import myEmailApp.dtos.util.UnregisteredUserException;
+import myEmailApp.dtos.response.FindUserResponse;
+import myEmailApp.service.UserService;
+import myEmailApp.service.UserServiceImpl;
+import myEmailApp.exceptions.UnregisteredUserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import myEmailApp.dtos.util.WrongInfoError;
+import myEmailApp.exceptions.WrongInfoError;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,7 +40,7 @@ class UserServiceImplTest {
         registerRequest.setLastName("micheal");
         registerRequest.setUserName("moyex");
         registerRequest.setPassword("Kinglat77");
-        registerRequest.setPhoneNumber("00000");
+        registerRequest.setPhoneNumber("09032445566");
         registerRequest.setEmailAddress("moyex33@gmail.com");
 
 
@@ -50,7 +51,7 @@ class UserServiceImplTest {
         registerRequest2.setFirstName("moyin");
         registerRequest2.setLastName("micheal");
         registerRequest2.setEmailAddress("moyex3@gmail.com");
-        registerRequest2.setPhoneNumber("9999999");
+        registerRequest2.setPhoneNumber("09087654433");
         registerRequest2.setPassword("Moyin123");
 
         mail.setSubject("i love cake");
@@ -71,7 +72,7 @@ class UserServiceImplTest {
 
     }
     @Test  public void registerOneUser_userIdIsOneTest() throws WrongInfoError {
-       User savedUser =  userService.register(registerRequest);
+       FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
     }
 
@@ -80,37 +81,37 @@ class UserServiceImplTest {
 
     }
     @Test public void findUserByIdTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
         User foundUser = userService.findUserById(savedUser.getId());
-        assertEquals(savedUser, foundUser);
+        assertEquals(savedUser.getId(), foundUser.getId());
     }
     @Test public void findUserByEmailAddressTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
         User foundUser = userService.findUserByEmailAddress(savedUser.getEmailAddress());
-        assertEquals(savedUser, foundUser);
+        assertEquals(savedUser.getId(), foundUser.getId());
     }
     @Test public void registeringWithExistingEmailAddress_generatesNewAddressTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
 
     }
     @Test public void userCanSendMailTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         userService.sendMail(composeMailRequest);
         assertEquals(1, savedUser2.getInbox().size());
     }
 
     @Test public void userSendsTwoMails_InboxOfRecipientSizeIsTwoTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         userService.sendMail(composeMailRequest);
         assertEquals(1, savedUser2.getInbox().size());
@@ -119,9 +120,9 @@ class UserServiceImplTest {
 
     }
     @Test public void userSendMail_MailReflectInSentBoxTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         userService.sendMail(composeMailRequest);
         assertEquals(1, savedUser2.getInbox().size());
@@ -129,50 +130,51 @@ class UserServiceImplTest {
     }
 
     @Test public void userSendMail_MailReflectInAllMailBoxTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         userService.sendMail(composeMailRequest);
         assertEquals(1, savedUser2.getInbox().size());
         assertEquals(1, savedUser.getAllMail().size());
     }
     @Test public void userSendMailWithWrongAddress_MailReflectInOutBoxTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         assertThrows(WrongInfoError.class, ()->  userService.sendMail(composeMailRequest2));
         assertEquals(1, savedUser.getOutBox().size());
     }
 
     @Test public void userCanDeleteMailFromAllBox_InboxSizeIsMinusOne() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         userService.sendMail(composeMailRequest);
         assertEquals(1, savedUser2.getInbox().size());
-        userService.deleteAllMail(savedUser.getEmailAddress(), mail.getSubject());
+        userService.deleteAllMail(savedUser.getEmailAddress());
         assertEquals(0, savedUser.getInbox().size());
 
     }
 
     @Test public void userCanDeleteMailFromInbox_InboxSizeIsMinusOne() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         userService.sendMail(composeMailRequest);
         assertEquals(1, savedUser2.getInbox().size());
         userService.deleteMail(mail.getSubject(),savedUser.getEmailAddress());
         assertEquals(0, savedUser.getInbox().size());
+        assertEquals(1, savedUser.getTrash().size());
     }
 
     @Test public void userCanDeleteMaiByIdlFromInbox_InboxSizeIsMinusOne() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         userService.sendMail(composeMailRequest);
         assertEquals(1, savedUser2.getInbox().size());
@@ -181,15 +183,30 @@ class UserServiceImplTest {
     }
 
     @Test public  void deleteMailFromInbox_sizeOfTrashIsOneTest() throws WrongInfoError {
-        User savedUser =  userService.register(registerRequest);
+        FindUserResponse savedUser =  userService.register(registerRequest);
         assertEquals(1, savedUser.getId());
-        User savedUser2 =  userService.register(registerRequest2);
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
         assertEquals(2, savedUser2.getId());
         userService.sendMail(composeMailRequest);
         assertEquals(1, savedUser2.getInbox().size());
         userService.deleteMail(mail.getId(), savedUser.getEmailAddress());
         assertEquals(0, savedUser.getInbox().size());
         assertEquals(1, savedUser.getTrash().size());
+
+    }
+
+    @Test public void userCanDeleteMail_andRestoreMailByIdTest() throws WrongInfoError {
+        FindUserResponse savedUser =  userService.register(registerRequest);
+        assertEquals(1, savedUser.getId());
+        FindUserResponse savedUser2 =  userService.register(registerRequest2);
+        assertEquals(2, savedUser2.getId());
+        userService.sendMail(composeMailRequest);
+        assertEquals(1, savedUser2.getInbox().size());
+        userService.deleteMail(mail.getId(), savedUser.getEmailAddress());
+        assertEquals(0, savedUser.getInbox().size());
+        assertEquals(1, savedUser.getTrash().size());
+        userService.restoreMail(savedUser.getEmailAddress(),1);
+        assertEquals(1, savedUser.getInbox().size());
 
     }
 }
