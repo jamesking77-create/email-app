@@ -10,11 +10,12 @@ import myEmailApp.exceptions.UnregisteredUserException;
 import myEmailApp.exceptions.WrongInfoError;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     FindUserResponse register(RegisterRequest registerRequest) throws WrongInfoError;
     String login(LoginRequest loginRequest) throws WrongInfoError, UnregisteredUserException;
-    User findUserById(int id);
+    Optional<User> findUserById(String id);
     User findUserByEmailAddress(String emailAddress);
     String viewInbox(String emailAddress) throws WrongInfoError;
     String sendMail(ComposeMailRequest mailRequest) throws WrongInfoError;
@@ -27,11 +28,11 @@ public interface UserService {
 
     String viewTrash(String emailAddress) throws WrongInfoError;
 
-    String deleteMail(int id, String userEmail) throws WrongInfoError;
+    String deleteMailById(String  id, String userEmail) throws WrongInfoError;
 
     String deleteMail(String mailSubject, String userEmail) throws WrongInfoError;
 
     String deleteAllMail(String userEmail) throws WrongInfoError;
 
-    String restoreMail(String userEMail, int id) throws WrongInfoError;
+    String restoreMail(String userEMail, String  id) throws WrongInfoError;
 }

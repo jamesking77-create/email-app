@@ -82,7 +82,7 @@ private final UserService userService = new UserServiceImpl();
     }
 
     @DeleteMapping("/user/deleteMailById")
-    public ResponseEntity<?> deleteMailById(int id, String email){
+    public ResponseEntity<?> deleteMailById(String id, String email){
         try {
             return  new ResponseEntity<>(userService.deleteMail(id, email), HttpStatus.OK);
         } catch ( WrongInfoError e) {
@@ -119,7 +119,7 @@ private final UserService userService = new UserServiceImpl();
     }
 
     @PostMapping("/user/restoreMailByIdt")
-    public ResponseEntity<?> restoreMailById(@RequestBody String email, int id){
+    public ResponseEntity<?> restoreMailById(@RequestBody String email, String  id){
         try {
             return new ResponseEntity<>(userService.restoreMail(email, id), HttpStatus.OK);
         } catch (WrongInfoError e) {

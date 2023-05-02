@@ -1,17 +1,14 @@
 package myEmailApp.data.repository;
 
 import myEmailApp.data.model.Mail;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface MailRepository {
-    Mail saveMail(Mail mail);
-    Mail findById(int id);
-    List<Mail> findAllMail();
-    void deleteMailById(int id);
-    long countMail();
-    void deleteAllMail();
-    void deleteMailByTitle(String title);
+public interface MailRepository extends MongoRepository<Mail, String > {
 
-    Mail findByTitle(String title);
+   default  void deleteMailByTitle(String title){
+       findAll().removeIf(mail -> mail.getSubject().equals(title));
+   }
+
 }

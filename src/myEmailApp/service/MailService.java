@@ -2,13 +2,15 @@ package myEmailApp.service;
 
 import myEmailApp.data.model.Mail;
 
+import java.util.Optional;
+
 public interface MailService {
     Mail saveMail(Mail composeMailRequest);
-    void deleteMailById(int id);
+    void deleteMailById(String  id);
     void deleteAllMail();
     void deleteMailByTitle(String title);
 
     Mail findMailByTitle(String title);
 
-    Mail findById(int id);
+    Optional<Mail> findById(String id);
 }

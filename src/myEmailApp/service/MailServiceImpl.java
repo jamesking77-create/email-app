@@ -1,31 +1,28 @@
 package myEmailApp.service;
 
 import myEmailApp.data.model.Mail;
-import myEmailApp.data.repository.MailRepo2;
 import myEmailApp.data.repository.MailRepository;
-import myEmailApp.data.repository.MailRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
 
 public class MailServiceImpl implements MailService {
-    MailRepository mailRepository = new MailRepositoryImpl();
-
     @Autowired
-    MailRepo2 mailRepo2;
+    MailRepository mailRepository;
 
     @Override
     public Mail saveMail(Mail MailRequest) {
-        return mailRepository.saveMail(MailRequest);
+        return mailRepository.save(MailRequest);
     }
 
     @Override
-    public void deleteMailById(int id) {
-        mailRepository.deleteMailById(id);
+    public void deleteMailById(String  id) {
+        mailRepository.deleteById(String.valueOf(id));
     }
 
     @Override
     public void deleteAllMail() {
-        mailRepository.deleteAllMail();
+        mailRepository.deleteAll();
     }
 
     @Override
@@ -35,11 +32,14 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public Mail findMailByTitle(String title) {
-        return mailRepository.findByTitle(title);
+        return null;
     }
 
     @Override
-    public Mail findById(int id) {
+    public Optional<Mail> findById(String id) {
         return mailRepository.findById(id);
     }
+
+
+
 }

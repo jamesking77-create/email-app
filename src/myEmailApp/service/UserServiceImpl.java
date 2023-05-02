@@ -1,5 +1,4 @@
 package myEmailApp.service;
-import myEmailApp.data.repository.UserRepositoryImpl;
 import myEmailApp.data.model.Mail;
 import myEmailApp.data.model.User;
 import myEmailApp.data.repository.UserRepository;
@@ -12,14 +11,16 @@ import myEmailApp.dtos.response.FindUserResponse;
 import myEmailApp.util.Mapper;
 import myEmailApp.exceptions.UnregisteredUserException;
 import myEmailApp.exceptions.WrongInfoError;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.Optional;
 
 public class UserServiceImpl implements UserService{
-    private final UserRepository userRepository = new UserRepositoryImpl();
+    @Autowired
+    private  UserRepository userRepository;
     private final MailService mailService = new MailServiceImpl();
     @Override
     public FindUserResponse register(RegisterRequest registerRequest) throws WrongInfoError {
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService{
             generateEmailAddress(registerRequest);
             throw new WrongInfoError("Address " + registerRequest.getEmailAddress()+" already taken");
         }
-        userRepository.saveUser(Mapper.map(registerRequest));
+        userRepository.save(Mapper.map(registerRequest));
         User foundUser = userRepository.findUserByEmailAddress(registerRequest.getEmailAddress());
         Mapper.map(foundUser,userResponse);
         return userResponse;
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public String login(LoginRequest loginRequest) throws  UnregisteredUserException {
         FindLoginResponse loginResponse = new FindLoginResponse();
-        for (User user: userRepository.findAllUser()) {
+        for (User user: userRepository.findAll()) {
             if (loginRequest.getEmailAddress().equals(user.getEmailAddress()) && loginRequest.getPassword().equals(user.getPassword())){
                 Mapper.map(loginRequest, loginResponse);
                 return loginResponse.getMessage();
@@ -100,8 +101,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findUserById(int id) {
-        return userRepository.findById(id);
+    public Optional<User> findUserById(String id) {
+        return userRepository.findById(String.valueOf(id));
     }
 
     @Override
@@ -190,13 +191,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String deleteMail(int id, String userEmail) throws WrongInfoError {
+    public String deleteMailById(String id, String userEmail) throws WrongInfoError {
             validateEmailAddress(userEmail);
-            Mail mail = mailService.findById(id);
-           userRepository.findUserByEmailAddress(userEmail).getTrash().add(mail);
-           userRepository.findUserByEmailAddress(userEmail).getOutBox().removeIf(mails -> id == mails.getId());
-           userRepository.findUserByEmailAddress(userEmail).getInbox().removeIf(mails -> id == mails.getId());
-           userRepository.findUserByEmailAddress(userEmail).getAllMail().removeIf(mails -> id == mails.getId());
+
+//           userRepository.findUserByEmailAddress(userEmail).getTrash().add(mailService.findById(id));
+           userRepository.findUserByEmailAddress(userEmail).getOutBox().removeIf(mails -> Objects.equals(id, mails.getId()));
+           userRepository.findUserByEmailAddress(userEmail).getInbox().removeIf(mails -> Objects.equals(id, mails.getId()));
+           userRepository.findUserByEmailAddress(userEmail).getAllMail().removeIf(mails -> Objects.equals(id, mails.getId()));
             return "(Mail) ->> deleted successfully";
     }
 
@@ -223,13 +224,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String restoreMail(String userEmail, int id) throws WrongInfoError {
+    public String restoreMail(String userEmail, String id) throws WrongInfoError {
      validateEmailAddress(userEmail);
      List<Mail> trash = userRepository.findUserByEmailAddress(userEmail).getTrash();
      List<Mail> inbox = userRepository.findUserByEmailAddress(userEmail).getInbox();
      List<Mail> allMail = userRepository.findUserByEmailAddress(userEmail).getAllMail();
         for (Mail mail: trash) {
-            if (id == mail.getId()){
+            if (Objects.equals(id, mail.getId())){
                 inbox.add(mail);
                 allMail.add(mail);
             }

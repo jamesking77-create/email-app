@@ -1,17 +1,14 @@
 package myEmailApp.data.repository;
 
 import myEmailApp.data.model.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface UserRepository {
-    User saveUser(User user);
-    User findById(int id);
-    List<User> findAllUser();
-    User findUserByEmailAddress(String emailAddress);
-    void deleteUserById(int id);
-    long countUser();
-    void deleteAllUser();
+public interface UserRepository extends MongoRepository<User, String > {
+
+     User findUserByEmailAddress(String emailAddress);
+
 
 
 
